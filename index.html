@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduShare Sierra Leone – Open Educational Platform</title>
+<style>
+  /* ─── DESIGN TOKENS ─────────────────────────────────── */
+  :root {
+    --green-deep:   #0d4f2e;
+    --green-mid:    #1a6b3c;
+    --green-soft:   #2d9a5a;
+    --green-pale:   #e8f5ee;
+    --green-border: #b2dfca;
+    --gold:         #c8960c;
+    --gold-pale:    #fdf6e0;
+    --white:        #ffffff;
+    --off-white:    #f9fafb;
+    --grey-light:   #f1f5f2;
+    --grey-mid:     #8a9b90;
+    --grey-text:    #374740;
+    --dark:         #1a2421;
+    --radius:       10px;
+    --shadow:       0 2px 16px rgba(13,79,46,0.10);
+    --shadow-card:  0 4px 24px rgba(13,79,46,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--off-white);
+    color: var(--grey-text);
+    min-height: 100vh;
+  }
+
+  /* ─── NAV ────────────────────────────────────────────── */
+  nav {
+    background: var(--green-deep);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--green-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .nav-title { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+  .nav-subtitle { color: rgba(255,255,255,0.55); font-size: 11px; }
+  .nav-links { display: flex; gap: 6px; }
+  .nav-links button {
+    background: none; border: none; color: rgba(255,255,255,0.75);
+    padding: 8px 14px; border-radius: 6px; font-size: 14px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-links button:hover, .nav-links button.active {
+    background: rgba(255,255,255,0.12); color: #fff;
+  }
+  .nav-cta {
+    background: var(--gold) !important;
+    color: var(--dark) !important;
+    font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: #e0a80f !important; }
+
+  /* ─── HERO ────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 60%, var(--green-soft) 100%);
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .hero h1 {
+    color: #fff; font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800; letter-spacing: -0.5px; line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    color: rgba(255,255,255,0.78);
+    font-size: 16px; max-width: 560px; margin: 0 auto 28px; line-height: 1.6;
+  }
+  .hero-search {
+    display: flex; gap: 0; max-width: 520px;
+    margin: 0 auto; border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  }
+  .hero-search input {
+    flex: 1; padding: 14px 20px; font-size: 15px;
+    border: none; outline: none;
+    background: #fff; color: var(--dark);
+  }
+  .hero-search button {
+    background: var(--gold); color: var(--dark);
+    border: none; padding: 14px 24px; font-size: 15px;
+    font-weight: 700; cursor: pointer; transition: background 0.2s;
+  }
+  .hero-search button:hover { background: #e0a80f; }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 32px;
+    margin-top: 32px; flex-wrap: wrap;
+  }
+  .hero-stat { color: rgba(255,255,255,0.85); text-align: center; }
+  .hero-stat strong { display: block; font-size: 26px; font-weight: 800; color: #fff; }
+  .hero-stat span { font-size: 12px; opacity: 0.7; }
+
+  /* ─── MAIN LAYOUT ─────────────────────────────────────── */
+  .main { max-width: 1140px; margin: 0 auto; padding: 32px 20px; }
+
+  /* ─── SECTION HEADING ─────────────────────────────────── */
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .section-head h2 { font-size: 20px; font-weight: 700; color: var(--green-deep); }
+  .section-head a { color: var(--green-soft); font-size: 13px; text-decoration: none; font-weight: 600; }
+
+  /* ─── FILTER BAR ──────────────────────────────────────── */
+  .filters {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .filter-btn {
+    background: var(--white); border: 1.5px solid var(--green-border);
+    color: var(--grey-text); padding: 7px 16px; border-radius: 20px;
+    font-size: 13px; cursor: pointer; transition: all 0.18s; font-weight: 500;
+  }
+  .filter-btn:hover { border-color: var(--green-mid); color: var(--green-mid); }
+  .filter-btn.active {
+    background: var(--green-mid); color: #fff; border-color: var(--green-mid);
+  }
+
+  /* ─── CONTENT GRID ────────────────────────────────────── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--green-border);
+    overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card); }
+  .card-banner {
+    height: 7px;
+    background: var(--green-mid);
+  }
+  .card-banner.gold { background: var(--gold); }
+  .card-banner.teal { background: #1a8a7a; }
+  .card-banner.purple { background: #6b4f9e; }
+  .card-body { padding: 18px; }
+  .card-meta {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .card-type {
+    background: var(--green-pale); color: var(--green-mid);
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .card-type.video { background: #fdf0e0; color: #b85c00; }
+  .card-type.audio { background: #eef0ff; color: #3a3fa0; }
+  .card-grade {
+    font-size: 11px; color: var(--grey-mid); margin-left: auto;
+  }
+  .card h3 {
+    font-size: 15px; font-weight: 700; color: var(--dark);
+    margin-bottom: 6px; line-height: 1.4;
+  }
+  .card p {
+    font-size: 12px; color: var(--grey-mid); line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 12px; border-top: 1px solid var(--grey-light);
+  }
+  .card-author { font-size: 12px; color: var(--grey-mid); }
+  .card-author strong { color: var(--grey-text); }
+  .stars { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
+  .card-actions { display: flex; gap: 4px; }
+
+  .btn-download {
+    background: var(--green-mid); color: #fff;
+    border: none; padding: 7px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-download:hover { background: var(--green-deep); }
+
+  .btn-delete {
+    background: #fff0f0; color: #c92a2a;
+    border: 1px solid #ffc9c9; padding: 6px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 12px; transition: all 0.2s;
+  }
+  .btn-delete:hover { background: #ffe3e3; }
+
+  /* ─── UPLOAD PANEL ────────────────────────────────────── */
+  .upload-panel {
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--green-border);
+    padding: 28px; margin-bottom: 28px; display: none;
+  }
+  .upload-panel h2 { font-size: 18px; font-weight: 700; color: var(--green-deep); margin-bottom: 18px; }
+  .form-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .form-grid form { display: contents; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 13px; font-weight: 600; color: var(--green-deep); }
+  input[type="text"], input[type="email"], select, textarea {
+    border: 1.5px solid var(--green-border); border-radius: 7px;
+    padding: 10px 14px; font-size: 14px; outline: none;
+    transition: border-color 0.2s; font-family: inherit;
+    background: var(--off-white);
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--green-mid); background: #fff; }
+
+  .drop-zone {
+    border: 2.5px dashed var(--green-border); border-radius: var(--radius);
+    padding: 32px; text-align: center; cursor: pointer;
+    position: relative; transition: all 0.2s; background: var(--green-pale);
+  }
+  .drop-zone:hover { border-color: var(--green-mid); background: #d9f0e5; }
+  .drop-zone input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .drop-zone .dz-icon { font-size: 36px; margin-bottom: 8px; }
+  .drop-zone p { color: var(--grey-mid); font-size: 13px; }
+  .drop-zone strong { color: var(--green-mid); }
+  .form-actions { display: flex; gap: 12px; margin-top: 16px; }
+
+  .btn-primary {
+    background: var(--green-mid); color: #fff;
+    border: none; padding: 11px 28px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--green-deep); }
+  .btn-secondary {
+    background: var(--white); color: var(--grey-text);
+    border: 1.5px solid var(--green-border);
+    padding: 11px 24px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--green-mid); color: var(--green-mid); }
+
+  /* ─── SDG BANNER ──────────────────────────────────────── */
+  .sdg-bar {
+    background: var(--green-deep); border-radius: var(--radius);
+    padding: 20px 24px; margin-bottom: 28px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  }
+  .sdg-bar p { color: rgba(255,255,255,0.8); font-size: 13px; line-height: 1.5; flex: 1; min-width: 200px; }
+  .sdg-badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .sdg-badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+  }
+
+  /* ─── MODAL ───────────────────────────────────────────── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(13,79,46,0.45); z-index: 500;
+    align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: #fff; border-radius: 14px;
+    max-width: 480px; width: 100%; padding: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-close { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--grey-mid); }
+  .modal h3 { font-size: 18px; font-weight: 700; color: var(--green-deep); margin-bottom: 16px; }
+  .modal-detail { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+  .modal-detail span:first-child { font-size: 20px; }
+  .modal-detail div p:first-child { font-size: 12px; color: var(--grey-mid); font-weight: 600; }
+  .modal-detail div p:last-child { font-size: 14px; color: var(--dark); }
+  .modal .btn-primary { width: 100%; margin-top: 12px; text-align: center; }
+
+  /* ─── DATA TRANSPARENCY OVERRIDES ─────────────────────── */
+  .privacy-list { margin-left: 18px; margin-top: 8px; margin-bottom: 14px; font-size: 13.5px; line-height: 1.6; }
+  .privacy-list li { margin-bottom: 6px; color: var(--grey-text); }
+
+  /* ─── TOAST ───────────────────────────────────────────── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--green-deep); color: #fff; padding: 12px 24px;
+    border-radius: 30px; font-size: 14px; font-weight: 600;
+    box-shadow: var(--shadow-card); z-index: 999;
+    transition: transform 0.3s ease; pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ─── FOOTER ──────────────────────────────────────────── */
+  footer {
+    background: var(--green-deep); color: rgba(255,255,255,0.6);
+    text-align: center; padding: 24px;
+    font-size: 12px; line-height: 1.7; margin-top: 40px;
+  }
+  footer strong { color: rgba(255,255,255,0.9); }
+  footer a { color: var(--gold); text-decoration: none; cursor: pointer; }
+
+  /* ─── LICENSE BADGE ───────────────────────────────────── */
+  .license-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--gold-pale); border: 1px solid #e0c060;
+    color: #7a5800; padding: 5px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* ─── EMPTY STATE ─────────────────────────────────────── */
+  .empty-state {
+    text-align: center; padding: 48px 24px; color: var(--grey-mid);
+    display: none;
+  }
+  .empty-state .es-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 26px; }
+    .nav-links { gap: 2px; }
+    .nav-links button { padding: 6px 10px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">📚</div>
+    <div>
+      <div class="nav-title">EduShare SL</div>
+      <div class="nav-subtitle">Open Educational Platform</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <button class="active" id="navBrowse" onclick="showView('browse')">Browse</button>
+    <button id="navUpload" onclick="showView('upload')">Upload</button>
+    <button id="navAbout" onclick="showView('about')">About</button>
+    <button class="nav-cta" onclick="openPrivacyModal()">Data Transparency</button>
+  </div>
+</nav>
+
+<div class="hero" id="hero">
+  <div class="hero-tag">🌍 Digital Public Good · SDG 4 · MIT License</div>
+  <h1>Free Education for Every<br><span>Sierra Leonean</span></h1>
+  <p>Upload, share, and download educational resources — lesson plans, textbooks, past papers, and more. Free. Open. For everyone.</p>
+  <div class="hero-search">
+    <input type="text" id="heroSearch" placeholder="Search subjects, topics, grade levels…" oninput="handleSearch(this.value)">
+    <button onclick="handleSearch(document.getElementById('heroSearch').value)">Search</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong id="statDocs">0</strong><span>Resources</span></div>
+    <div class="hero-stat"><strong>8</strong><span>Subjects</span></div>
+    <div class="hero-stat"><strong>Free</strong><span>Always</span></div>
+    <div class="hero-stat"><strong>MIT</strong><span>Open Source</span></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="sdg-bar">
+    <p>This platform is a <strong>Digital Public Good</strong> aligned with the UN Sustainable Development Goals, designed to address Sierra Leone's educational access challenges.</p>
+    <div class="sdg-badges">
+      <span class="sdg-badge">SDG 4: Quality Education</span>
+      <span class="sdg-badge">SDG 10: Reduced Inequalities</span>
+      <span class="sdg-badge">SDG 17: Partnerships</span>
+    </div>
+  </div>
+
+  <div class="upload-panel" id="uploadPanel">
+    <h2>📤 Upload a Resource</h2>
+    <div class="form-grid">
+      <form id="realUploadForm" onsubmit="submitUpload(event)">
+          <div class="form-group">
+            <label>Resource Title *</label>
+            <input type="text" id="upTitle" placeholder="e.g. BECE Mathematics Past Papers 2023" required>
+          </div>
+          <div class="form-group">
+            <label>Subject *</label>
+            <select id="upSubject" required>
+              <option value="">Select subject…</option>
+              <option>Mathematics</option>
+              <option>English Language</option>
+              <option>Science</option>
+              <option>Social Studies</option>
+              <option>Agriculture</option>
+              <option>ICT</option>
+              <option>History</option>
+              <option>Geography</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Grade / Level *</label>
+            <select id="upGrade" required>
+              <option value="">Select grade…</option>
+              <option>Primary 1–3</option>
+              <option>Primary 4–6</option>
+              <option>JSS 1–3</option>
+              <option>SSS 1–3</option>
+              <option>All Levels</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Resource Type *</label>
+            <select id="upType" required>
+              <option value="">Select type…</option>
+              <option>Lesson Plan</option>
+              <option>Textbook</option>
+              <option>Past Exam Paper</option>
+              <option>Notes</option>
+              <option>Video</option>
+              <option>Audio</option>
+              <option>Exercise Sheet</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Description</label>
+            <textarea id="upDesc" rows="3" placeholder="Briefly describe this resource and who it's for…"></textarea>
+          </div>
+          <div class="form-group full">
+            <label>Upload File *</label>
+            <div class="drop-zone">
+              <div class="dz-icon">☁️</div>
+              <p id="fileLabel"><strong>Click to select a file</strong> or drag and drop here</p>
+              <p>Accepted: PDF, DOCX, MP4, MP3, PNG, JPG · Max 50MB</p>
+              <input type="file" id="upFile" onchange="handleFileSelection(this)" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="upAuthor" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Content License</label>
+            <select id="upLicense">
+              <option>CC BY 4.0 (Attribution)</option>
+              <option>CC BY-SA 4.0</option>
+              <option>CC BY-NC 4.0</option>
+              <option>CC0 (Public Domain)</option>
+            </select>
+          </div>
+          <div class="form-actions full">
+            <button type="submit" class="btn-primary">📤 Submit Resource</button>
+            <button type="button" class="btn-secondary" onclick="showView('browse')">Cancel</button>
+          </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="aboutPanel" style="display:none">
+    <div style="background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--green-border);padding:32px;margin-bottom:28px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--green-deep);margin-bottom:16px;">About EduShare Sierra Leone</h2>
+      <p style="line-height:1.7;margin-bottom:12px;font-size:15px;">EduShare Sierra Leone is a free, open-source Digital Public Good designed to democratise access to quality educational materials across Sierra Leone. The platform is built by students in BSEM2202 GROUP 1 semester 6 at Limkokwing University of Creative Technology.</p>
+      <p style="line-height:1.7;margin-bottom:24px;font-size:15px;">Sierra Leone faces a severe shortage of textbooks, lesson materials, and qualified teachers — especially in rural districts. EduShare bridges this gap by creating a central repository where educators and learners can freely share and access resources, with no registration required to download.</p>
+      <h3 style="font-size:16px;font-weight:700;color:var(--green-mid);margin-bottom:12px;">License &amp; Legal Compliance</h3>
+      <div style="background:var(--gold-pale);border:1.5px solid #e0c060;border-radius:8px;padding:16px;margin-bottom:20px;">
+        <p style="font-size:13px;font-weight:700;color:#7a5800;margin-bottom:6px;">🔓 MIT License (Open Source)</p>
+        <p style="font-size:13px;color:#5a4000;line-height:1.6;">This platform is released under the MIT License. Anyone may use, copy, modify, merge, publish, distribute, sublicense, or sell copies of this software, subject to inclusion of the copyright notice. It complies with the DPG Standard's open-source licensing requirement.</p>
+      </div>
+      <h3 style="font-size:16px;font-weight:700;color:var(--green-mid);margin-bottom:12px;">Privacy Policy Summary</h3>
+      <ul style="line-height:2;font-size:13px;padding-left:20px;color:var(--grey-text);">
+        <li>No personal data required to download resources</li>
+        <li>Registration collects only: username, email, country</li>
+        <li>Passwords hashed with bcrypt (never stored in plaintext)</li>
+        <li>No data sold to or shared with third parties</li>
+        <li>Users may delete their account and content at any time</li>
+        <li>Compliant with GDPR principles as international best practice</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="browseView">
+    <div class="section-head">
+      <h2>📖 Educational Resources</h2>
+      <span class="license-badge">🔓 MIT Licensed</span>
+    </div>
+
+    <div class="filters" id="filterBar">
+      <button class="filter-btn active" onclick="filterBy('all', this)">All Resources</button>
+      <button class="filter-btn" onclick="filterBy('Mathematics', this)">Mathematics</button>
+      <button class="filter-btn" onclick="filterBy('Science', this)">Science</button>
+      <button class="filter-btn" onclick="filterBy('English Language', this)">English</button>
+      <button class="filter-btn" onclick="filterBy('Social Studies', this)">Social Studies</button>
+      <button class="filter-btn" onclick="filterBy('Agriculture', this)">Agriculture</button>
+      <button class="filter-btn" onclick="filterBy('ICT', this)">ICT</button>
+    </div>
+
+    <div class="content-grid" id="contentGrid"></div>
+    <div class="empty-state" id="emptyState">
+      <div class="es-icon">🔍</div>
+      <p>No resources found. Try a different search or filter.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <strong>EduShare Sierra Leone</strong> &nbsp;·&nbsp; A Digital Public Good for SDG 4<br>
+  Released under the <a href="#">MIT License</a> &nbsp;·&nbsp;
+  Built by BSEM2202 GROUP 1 semester 6 Students, Limkokwing University, Sierra Leone &nbsp;·&nbsp;
+  <a onclick="openPrivacyModal()">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="#">GitHub Repository</a><br><br>
+  <em>© 2026 EduShare Sierra Leone Development Team. Free to use, copy, modify, and distribute.</em>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="privacyModalOverlay" onclick="closePrivacyModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closePrivacyModalDirect()">✕</button>
+    <h3>🛡️ Data Transparency &amp; Privacy Note</h3>
+
+    <div class="modal-detail">
+      <span>🤝</span>
+      <div>
+        <p>Voluntary Compliance Framework</p>
+        <p style="font-size:13.5px; line-height:1.5;">EduShare Sierra Leone functions as a non-commercial Digital Public Good. In accordance with standard international data protection best practices:</p>
+      </div>
+    </div>
+
+    <ul class="privacy-list">
+      <li><strong>Frictionless Access:</strong> No authorization or creation of a user profile record is required to query or download any asset on this network.</li>
+      <li><strong>Data Minimization:</strong> Contributing files only tracks the voluntary descriptive string tags typed in the fields above.</li>
+      <li><strong>Legal Foundation:</strong> System designs align directly with Sierra Leone's <em>Right to Access Information Act (2013)</em> framework.</li>
+    </ul>
+
+    <button class="btn-primary" onclick="closePrivacyModalDirect()">I Understand</button>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000/";
+let dbResources = [];
+let currentFilter = 'all';
+let currentSearch = '';
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchBackendResources();
+});
+
+function handleFileSelection(input) {
+    const label = document.getElementById("fileLabel");
+    if(input.files && input.files.length > 0) {
+        label.innerText = `Selected: ${input.files[0].name}`;
+        label.style.color = "var(--green-mid)";
+    } else {
+        label.innerText = "Click to select a file";
+        label.style.color = "inherit";
+    }
+}
+
+async function fetchBackendResources() {
+    try {
+        const response = await fetch(`${API_URL}resources`);
+        if (response.ok) {
+            dbResources = await response.json();
+            document.getElementById("statDocs").innerText = dbResources.length;
+            renderCards(getFiltered());
+        } else {
+            toast("⚠️ Failed to load database resources.");
+        }
+    } catch (err) {
+        console.error("Backend offline:", err);
+        toast("🔌 Cannot connect to FastAPI server.");
+    }
+}
+
+async function submitUpload(event) {
+    event.preventDefault();
+
+    const title = document.getElementById("upTitle").value;
+    const subject = document.getElementById("upSubject").value;
+    const grade = document.getElementById("upGrade").value;
+    const type = document.getElementById("upType").value;
+    const description = document.getElementById("upDesc").value;
+    const fileField = document.getElementById("upFile").files[0];
+
+    if (!title || !subject || !grade || !type || !fileField) {
+        toast("⚠️ Please fill out all mandatory fields and selections.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", title);
+
+    const author = document.getElementById("upAuthor").value || "Anonymous Contributor";
+    const combinedDescription = `[Subject: ${subject} | Grade: ${grade} | Type: ${type} | Author: ${author}] ${description}`;
+
+    formData.append("description", combinedDescription);
+    formData.append("file", fileField);
+
+    try {
+        toast("📤 Uploading file to server...");
+        const response = await fetch(`${API_URL}resources`, {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.ok) {
+            toast("✅ Resource successfully uploaded!");
+            document.getElementById("realUploadForm").reset();
+            document.getElementById("fileLabel").innerText = "Click to select a file";
+            document.getElementById("fileLabel").style.color = "inherit";
+            showView("browse");
+            fetchBackendResources();
+        } else {
+            const errDetails = await response.json();
+            toast(`❌ Upload failed: ${JSON.stringify(errDetails.detail || errDetails)}`);
+        }
+    } catch (error) {
+        console.error(error);
+        toast("⚡ Error connecting to server during transfer.");
+    }
+}
+
+async function deleteResource(id, event) {
+    if(event) event.stopPropagation();
+    if(!confirm("Are you sure you want to permanently delete this resource from database?")) return;
+
+    try {
+        const response = await fetch(`${API_URL}resources/${id}`, {
+            method: "DELETE"
+        });
+
+        if (response.ok || response.status === 204) {
+            toast("🗑️ Resource deleted successfully.");
+            closeModalDirect();
+            fetchBackendResources();
+        } else {
+            toast("⚠️ Error executing delete operation.");
+        }
+    } catch (err) {
+        toast("🔌 Communication link failure during deletion.");
+    }
+}
+
+function renderCards(data) {
+  const grid = document.getElementById('contentGrid');
+  const empty = document.getElementById('emptyState');
+  if (!data.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = data.map(r => {
+    let subject = "General", grade = "All Levels", type = "Resource", author = "Contributor", pureDesc = r.description || "";
+    if (r.description && r.description.startsWith("[Subject:")) {
+        const parts = r.description.split("]");
+        pureDesc = parts.slice(1).join("]").trim();
+        const metaStr = parts[0].replace("[", "");
+        metaStr.split("|").forEach(chunk => {
+            const kv = chunk.split(":");
+            if (kv.length === 2) {
+                const key = kv[0].trim();
+                const val = kv[1].trim();
+                if (key === "Subject") subject = val;
+                if (key === "Grade") grade = val;
+                if (key === "Type") type = val;
+                if (key === "Author") author = val;
+            }
+        });
+    }
+
+    let colorBanner = "";
+    if(subject === "Mathematics") colorBanner = "gold";
+    if(subject === "Science" || subject === "Agriculture") colorBanner = "teal";
+    if(subject === "ICT") colorBanner = "purple";
+
+    const safeTitle = (r.title || "Untitled Resource").replace(/'/g, "\\'");
+    const safeSubject = subject.replace(/'/g, "\\'");
+    const safeGrade = grade.replace(/'/g, "\\'");
+    const safeType = type.replace(/'/g, "\\'");
+    const safeAuthor = author.replace(/'/g, "\\'");
+    const safeDesc = pureDesc.replace(/'/g, "\\'");
+
+    return `
+    <div class="card" onclick="openResource(${r.id}, '${safeTitle}', '${safeSubject}', '${safeGrade}', '${safeType}', '${safeAuthor}', '${safeDesc}', '${r.file_path}')">
+      <div class="card-banner ${colorBanner}"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-type ${type === 'Video' ? 'video' : type === 'Audio' ? 'audio' : ''}">${type}</span>
+          <span class="card-grade">${grade}</span>
+        </div>
+        <h3>${r.title}</h3>
+        <p>${pureDesc || 'No description available.'}</p>
+        <div class="card-footer">
+          <div>
+            <div class="card-author">By <strong>${author}</strong></div>
+            <div class="stars">★★★★★ <span style="color:var(--grey-mid);font-size:11px;">${subject}</span></div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-delete" onclick="deleteResource(${r.id}, event)">🗑️</button>
+            <button class="btn-download" onclick="event.stopPropagation(); openResource(${r.id}, '${safeTitle}', '${safeSubject}', '${safeGrade}', '${safeType}', '${safeAuthor}', '${safeDesc}', '${r.file_path}')">⬇ Open</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function downloadFileDirect(filePath) {
+    if (!filePath) {
+        toast("⚠️ No file path mapping matches this resource registry.");
+        return;
+    }
+    toast("📂 Fetching file content from server...");
+
+    const base = API_URL.endsWith('/') ? API_URL : API_URL + '/';
+    const cleanPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+    const finalUrl = base + cleanPath;
+
+    console.log("Routing browser view request directly to target url:", finalUrl);
+    window.open(finalUrl, '_blank');
+}
+
+function getFiltered() {
+  return dbResources.filter(r => {
+    let subject = "General", grade = "All Levels", pureDesc = r.description || "";
+    if (r.description && r.description.startsWith("[Subject:")) {
+        const parts = r.description.split("]");
+        pureDesc = parts.slice(1).join("]").trim();
+        if(parts[0].includes("Subject: ")) subject = parts[0].split("Subject: ")[1].split("|")[0].trim();
+        if(parts[0].includes("Grade: ")) grade = parts[0].split("Grade: ")[1].split("|")[0].trim();
+    }
+
+    const matchFilter = currentFilter === 'all' || subject.toLowerCase() === currentFilter.toLowerCase();
+    const q = currentSearch.toLowerCase();
+    const matchSearch = !q || r.title.toLowerCase().includes(q) || subject.toLowerCase().includes(q) || pureDesc.toLowerCase().includes(q) || grade.toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+}
+
+function filterBy(subject, btn) {
+  currentFilter = subject;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(getFiltered());
+}
+
+function handleSearch(val) {
+  currentSearch = val;
+  renderCards(getFiltered());
+}
+
+/* ─── MODAL CONTROL HANDLERS ──────────────────────────── */
+function openResource(id, title, subject, grade, type, author, desc, filePath) {
+    const modalContent = document.getElementById("modalContent");
+    modalContent.innerHTML = `
+        <h3>📌 ${title}</h3>
+        <div class="modal-detail"><span>📖</span><div><p>Subject &amp; Academic Grade</p><p>${subject} — (${grade})</p></div></div>
+        <div class="modal-detail"><span>🛠️</span><div><p>Resource Type</p><p>${type}</p></div></div>
+        <div class="modal-detail"><span>✍️</span><div><p>Contributor Attribution</p><p>${author}</p></div></div>
+        <div class="modal-detail"><span>📝</span><div><p>Description / Notes</p><p>${desc || 'No descriptive details available.'}</p></div></div>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="btn-primary" style="flex:1" onclick="downloadFileDirect('${filePath}')">⬇️ Open File Asset</button>
+            <button class="btn-secondary" style="color:#c92a2a; border-color:#ffc9c9" onclick="deleteResource(${id}, event)">🗑️ Delete</button>
+        </div>
+    `;
+    document.getElementById("modalOverlay").classList.add("show");
+}
+
+function closeModalDirect() {
+    document.getElementById("modalOverlay").classList.remove("show");
+}
+
+function closeModal(event) {
+    if(event.target === document.getElementById("modalOverlay")) {
+        closeModalDirect();
+    }
+}
+
+/* ─── PRIVACY MODAL JAVASCRIPT WIRE-UP ────────────────── */
+function openPrivacyModal() {
+    const privacyModal = document.getElementById("privacyModalOverlay");
+    if(privacyModal) {
+        privacyModal.classList.add("show");
+    }
+}
+
+function closePrivacyModalDirect() {
+    const privacyModal = document.getElementById("privacyModalOverlay");
+    if(privacyModal) {
+        privacyModal.classList.remove("show");
+    }
+}
+
+function closePrivacyModalOutside(event) {
+    const privacyModal = document.getElementById("privacyModalOverlay");
+    if (event.target === privacyModal) {
+        closePrivacyModalDirect();
+    }
+}
+
+/* ─── TOAST NOTIFICATION HANDLER ──────────────────────── */
+function toast(msg) {
+    const toastEl = document.getElementById("toastEl");
+    toastEl.innerText = msg;
+    toastEl.classList.add("show");
+    setTimeout(() => {
+        toastEl.classList.remove("show");
+    }, 3200);
+}
+
+/* ─── APPARATUS MULTI-VIEW CARD INDEX ROUTER ──────────── */
+function showView(v) {
+  document.getElementById('browseView').style.display = v === 'browse' ? 'block' : 'none';
+  document.getElementById('uploadPanel').style.display = v === 'upload' ? 'block' : 'none';
+  document.getElementById('aboutPanel').style.display = v === 'about' ? 'block' : 'none';
+  document.getElementById('hero').style.display = v === 'browse' ? 'block' : 'none';
+
+  document.getElementById('navBrowse').classList.remove('active');
+  document.getElementById('navUpload').classList.remove('active');
+  document.getElementById('navAbout').classList.remove('active');
+
+  if(v === 'browse') document.getElementById('navBrowse').classList.add('active');
+  if(v === 'upload') document.getElementById('navUpload').classList.add('active');
+  if(v === 'about') document.getElementById('navAbout').classList.add('active');
+}
+</script>
+</body>
+</html>
